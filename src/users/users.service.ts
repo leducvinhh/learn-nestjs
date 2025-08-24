@@ -17,6 +17,10 @@ export class UsersService {
     return hashPassword;
   };
 
+  isMongoId = (id: string) => {
+    return !!mongoose.Types.ObjectId.isValid(id);
+  };
+
   async create(createUserDto: CreateUserDto) {
     const hashPassword = this.getHashPassword(createUserDto.password);
 
@@ -34,15 +38,21 @@ export class UsersService {
   }
 
   findOne(id: string) {
-    if (mongoose.Types.ObjectId.isValid(id) === false) {
-      return 'id is not valid';
+    if (this.isMongoId(id)) {
+      return this.userModel.findOne({ _id: id });
     }
 
-    return this.userModel.findOne({ _id: id });
+    return 'id is not valid';
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(updateUserDto: UpdateUserDto) {
+    const { id, ...updateData } = updateUserDto;
+
+    if (this.isMongoId(id)) {
+      return this.userModel.updateOne({ _id: id }, updateData);
+    }
+
+    return 'id is not valid';
   }
 
   remove(id: number) {

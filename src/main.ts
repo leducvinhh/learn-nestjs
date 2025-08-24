@@ -14,7 +14,12 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('ejs');
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // CHỈ giữ lại properties có validation decorators
+      forbidNonWhitelisted: true, // REJECT nếu có properties không có decorators
+    }),
+  );
 
   await app.listen(port);
 }
