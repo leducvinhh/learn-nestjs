@@ -55,7 +55,11 @@ export class UsersService {
     return 'id is not valid';
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    if (this.isMongoId(id)) {
+      return this.userModel.deleteOne({ _id: id });
+    }
+
+    return 'id is not valid';
   }
 }
