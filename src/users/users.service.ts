@@ -17,6 +17,10 @@ export class UsersService {
     return hashPassword;
   };
 
+  isValidPassword = (password: string, hashedPassword: string) => {
+    return bcrypt.compareSync(password, hashedPassword);
+  };
+
   isMongoId = (id: string) => {
     return !!mongoose.Types.ObjectId.isValid(id);
   };
@@ -43,6 +47,10 @@ export class UsersService {
     }
 
     return 'id is not valid';
+  }
+
+  findOneByUsername(username: string) {
+    return this.userModel.findOne({ email: username });
   }
 
   update(updateUserDto: UpdateUserDto) {
