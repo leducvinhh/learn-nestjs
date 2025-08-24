@@ -13,8 +13,6 @@ export class AuthService {
     const isValid = this.usersService.isValidPassword(pass, user.password);
     if (!isValid) return null;
 
-    const { password, ...result } = user;
-
-    return result;
+    return user;
   }
 }
