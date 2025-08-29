@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { AuthModule } from './auth/auth.module';
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get('MONGODB_URL'),
         connectionFactory: (connection) => {
-          connection.plugin(require('mongoose-autopopulate'));
+          connection.plugin(softDeletePlugin);
           return connection;
         },
       }),
