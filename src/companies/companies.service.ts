@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Company, CompanyDocument } from './schemas/company.schema';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from 'src/users/user.interface';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class CompaniesService {
@@ -31,8 +32,23 @@ export class CompaniesService {
     return `This action returns a #${id} company`;
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+  update(
+    id: mongoose.Schema.Types.ObjectId,
+    updateCompanyDto: UpdateCompanyDto,
+    user: IUser,
+  ) {
+    return this.companyModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        ...updateCompanyDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
   }
 
   remove(id: number) {

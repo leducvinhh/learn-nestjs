@@ -12,6 +12,7 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { User } from 'src/decorators/customize';
 import { IUser } from 'src/users/user.interface';
+import mongoose from 'mongoose';
 
 @Controller('companies')
 export class CompaniesController {
@@ -33,8 +34,12 @@ export class CompaniesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companiesService.update(+id, updateCompanyDto);
+  update(
+    @Param('id') id: mongoose.Schema.Types.ObjectId,
+    @Body() updateCompanyDto: UpdateCompanyDto,
+    @User() user: IUser,
+  ) {
+    return this.companiesService.update(id, updateCompanyDto, user);
   }
 
   @Delete(':id')
