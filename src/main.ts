@@ -22,8 +22,8 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // CHỈ giữ lại properties có validation decorators
-      forbidNonWhitelisted: true, // REJECT nếu có properties không có decorators
+      whitelist: true,
+      forbidNonWhitelisted: true,
     }),
   );
 
