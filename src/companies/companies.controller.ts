@@ -11,7 +11,7 @@ import {
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
-import { User } from 'src/decorators/customize';
+import { ResponseMessage, User } from 'src/decorators/customize';
 import { IUser } from 'src/users/user.interface';
 import mongoose from 'mongoose';
 
@@ -25,6 +25,7 @@ export class CompaniesController {
   }
 
   @Get()
+  @ResponseMessage('List of companies retrieved successfully')
   findAll(
     @Query('page') currentPage: string,
     @Query('limit') limit: string,
