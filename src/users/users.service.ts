@@ -38,6 +38,10 @@ export class UsersService {
     return !!user;
   }
 
+  async updateUserToken(refreshToken: string, _id: string) {
+    return this.userModel.updateOne({ _id }, { refreshToken });
+  }
+
   async create(createUserDto: CreateUserDto, user: IUser) {
     const isExits = await this.isEmailExits(createUserDto.email);
     if (isExits) {
