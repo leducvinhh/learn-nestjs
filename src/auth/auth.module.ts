@@ -15,12 +15,15 @@ import { AuthController } from './auth.controller';
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_ACCESS_SECRET'),
-        signOptions: {
-          expiresIn: ms(configService.get<string>('JWT_ACCESS_EXPIRES_IN')),
-        },
-      }),
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+          signOptions: {
+            expiresIn:
+              ms(configService.get<string>('JWT_ACCESS_EXPIRES_IN')) / 1000,
+          },
+        };
+      },
       inject: [ConfigService],
     }),
   ],

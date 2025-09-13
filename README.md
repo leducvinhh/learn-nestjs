@@ -34,8 +34,10 @@ Create a `.env` file in the root directory and add the following:
 ```env
 PORT=
 MONGODB_URL=
-JWT_ACCESS_SECRET=
+JWT_ACCESS_TOKEN_SECRET=
 JWT_ACCESS_EXPIRES_IN=
+JWT_REFRESH_TOKEN_SECRET=
+JWT_REFRESH_EXPIRES_IN=
 ```
 
 ### Running the Project

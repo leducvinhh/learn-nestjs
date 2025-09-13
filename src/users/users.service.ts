@@ -93,6 +93,7 @@ export class UsersService {
 
     const result = await this.userModel
       .find(filter)
+      .select('-password')
       .skip(offset)
       .limit(defaultLimit)
       .sort(sort as any)
@@ -112,7 +113,7 @@ export class UsersService {
 
   findOne(id: string) {
     if (this.isMongoId(id)) {
-      return this.userModel.findOne({ _id: id });
+      return this.userModel.findOne({ _id: id }).select('-password');
     }
 
     return 'id is not valid';
