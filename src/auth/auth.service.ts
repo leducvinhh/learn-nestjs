@@ -34,52 +34,13 @@ export class AuthService {
     });
   }
 
-  async login(user: IUser, response: Response) {
-    const { _id, name, email, role } = user;
-
-    const payload = {
-      sub: 'token login',
-      iss: 'from server',
-      _id: _id.toString(),
-      name,
-      email,
-      role,
-    };
-    const refreshToken = this.createRefreshToken(payload);
-    await this.usersService.updateUserToken(refreshToken, _id);
-
-    response.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRES_IN')),
-    });
-
-    return {
-      access_token: this.jwtService.sign(payload),
-      user: {
-        _id,
-        name,
-        email,
-        role,
-      },
-    };
-  }
-
-  async register(user: RegisterUserDto) {
-    const newUser = await this.usersService.register(user);
-
-    return {
-      _id: newUser._id,
-      createdAt: newUser.createdAt,
-    };
-  }
-
   processNewToken = async (refreshToken: string, response: Response) => {
     try {
       await this.jwtService.verify(refreshToken, {
         secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
       });
 
-      const user = await this.usersService.getUserByToken(refreshToken);
+      const user = await this.usersService.findUserByToken(refreshToken);
 
       if (user) {
         const { _id, name, email, role } = user;
@@ -120,4 +81,56 @@ export class AuthService {
       );
     }
   };
+
+  async login(user: IUser, response: Response) {
+    const { _id, name, email, role } = user;
+
+    const payload = {
+      sub: 'token login',
+      iss: 'from server',
+      _id: _id.toString(),
+      name,
+      email,
+      role,
+    };
+    const refreshToken = this.createRefreshToken(payload);
+    await this.usersService.updateUserToken(refreshToken, _id);
+
+    response.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRES_IN')),
+    });
+
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: {
+        _id,
+        name,
+        email,
+        role,
+      },
+    };
+  }
+
+  async register(user: RegisterUserDto) {
+    const newUser = await this.usersService.register(user);
+
+    return {
+      _id: newUser._id,
+      createdAt: newUser.createdAt,
+    };
+  }
+
+  async logout(userId: string, response: Response) {
+    const user = await this.usersService.findOne(userId);
+
+    if (user) {
+      const { _id } = user;
+      await this.usersService.updateUserToken(null, _id.toString());
+
+      response.clearCookie('refresh_token');
+
+      return 'ok';
+    }
+  }
 }

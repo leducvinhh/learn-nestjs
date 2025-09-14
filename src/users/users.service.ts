@@ -42,7 +42,7 @@ export class UsersService {
     return this.userModel.updateOne({ _id }, { refreshToken });
   }
 
-  async getUserByToken(refreshToken: string) {
+  async findUserByToken(refreshToken: string) {
     return this.userModel.findOne({ refreshToken });
   }
 
@@ -90,8 +90,8 @@ export class UsersService {
   async findAll(currentPage: string, limit: string, qs: string) {
     const { filter, population, sort } = aqp(qs);
 
-    delete filter.page;
-    delete filter.limit;
+    delete filter.current;
+    delete filter.pageSize;
 
     let defaultLimit = +limit ? +limit : 10;
     let offset = (+currentPage - 1) * +defaultLimit;
@@ -124,7 +124,7 @@ export class UsersService {
       return this.userModel.findOne({ _id: id }).select('-password');
     }
 
-    return 'id is not valid';
+    return null;
   }
 
   findOneByUsername(username: string) {

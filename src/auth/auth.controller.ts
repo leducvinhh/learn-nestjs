@@ -29,10 +29,10 @@ export class AuthController {
   @Get('/refresh')
   handleRefreshToken(
     @Req() request: Request,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) response: Response,
   ) {
     const refreshToken = request.cookies['refresh_token'];
-    return this.authService.processNewToken(refreshToken, res);
+    return this.authService.processNewToken(refreshToken, response);
   }
 
   @Public()
@@ -41,9 +41,9 @@ export class AuthController {
   @Post('/login')
   handleLogin(
     @Req() req: Request & { user: IUser },
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) response: Response,
   ) {
-    return this.authService.login(req.user, res);
+    return this.authService.login(req.user, response);
   }
 
   @Post('register')
@@ -51,5 +51,14 @@ export class AuthController {
   @Public()
   register(@Body() registerUserDto: RegisterUserDto) {
     return this.authService.register(registerUserDto);
+  }
+
+  @Post('/logout')
+  @ResponseMessage('Logout user')
+  handleLogout(
+    @User() user: IUser,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return this.authService.logout(user._id, response);
   }
 }
