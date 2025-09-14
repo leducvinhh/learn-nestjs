@@ -42,6 +42,10 @@ export class UsersService {
     return this.userModel.updateOne({ _id }, { refreshToken });
   }
 
+  async getUserByToken(refreshToken: string) {
+    return this.userModel.findOne({ refreshToken });
+  }
+
   async create(createUserDto: CreateUserDto, user: IUser) {
     const isExits = await this.isEmailExits(createUserDto.email);
     if (isExits) {
