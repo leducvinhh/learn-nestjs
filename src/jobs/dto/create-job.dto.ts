@@ -17,6 +17,9 @@ class Company {
 
   @IsNotEmpty()
   name: mongoose.Schema.Types.ObjectId;
+
+  @IsNotEmpty()
+  logo: string;
 }
 
 export class CreateJobDto {
@@ -62,4 +65,8 @@ export class CreateJobDto {
   @IsBoolean()
   @IsNotEmpty({ message: 'isActive is required' })
   isActive: boolean;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Location is required' })
+  location: string;
 }
